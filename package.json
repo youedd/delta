@@ -8,7 +8,7 @@
   "scripts": {
     "build": "yarn run clean-dist && webpack -p --config=configs/webpack/prod.js",
     "clean-dist": "rimraf dist/*",
-    "lint": "eslint './src/**/*.{js,ts,tsx}' --quiet",
+    "lint": "eslint './src/**/*.{js,ts,tsx}' ",
     "start": "yarn run start-dev",
     "start-dev": "webpack-dev-server --config=configs/webpack/dev.js",
     "start-prod": "yarn run build && node express.js",
@@ -16,6 +16,7 @@
   },
   "husky": {
     "hooks": {
+      "pre-commit": "yarn run lint",
       "pre-push": "yarn run lint"
     }
   },
