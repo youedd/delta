@@ -1,12 +1,33 @@
-$bg-color: yellow;
-$border-color: red;
+* {
+  margin: 0;
+  padding: 0;
+}
 
 .app {
   font-family: helvetica, arial, sans-serif;
-  padding: 2em;
-  border: 5px solid $border-color;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: yellowgreen;
 
-  p {
-    background-color: $bg-color;
+  .camera-bar {
+    background-color: #505050;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    color: whitesmoke;
+    padding: 5px;
+    padding-left: 20px;
+    user-select: none;
+  }
+
+  .expand-button::after {
+    padding: 0px 5px;
+    border-radius: 5px;
+    background-color: black;
+    user-select: none;
+    content: '\2212';
+  }
+  .active::after {
+    content: '\002B';
   }
 }
