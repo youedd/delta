@@ -1,6 +1,6 @@
 // shared config (dev and prod)
-const {resolve} = require('path');
-const {CheckerPlugin} = require('awesome-typescript-loader');
+const { resolve } = require('path');
+const { CheckerPlugin } = require('awesome-typescript-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -21,7 +21,10 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', { loader: 'css-loader', options: { importLoaders: 1 } }],
+        use: [
+          'style-loader',
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+        ],
       },
       {
         test: /\.(scss|sass)$/,
@@ -42,10 +45,11 @@ module.exports = {
   },
   plugins: [
     new CheckerPlugin(),
-    new HtmlWebpackPlugin({template: 'index.html.ejs',}),
+    new HtmlWebpackPlugin({ template: 'index.html.ejs' }),
   ],
   externals: {
-    'react': 'React',
+    p5: 'p5',
+    react: 'React',
     'react-dom': 'ReactDOM',
   },
   performance: {
