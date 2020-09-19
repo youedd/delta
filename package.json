@@ -10,7 +10,7 @@
     "clean-dist": "rimraf dist/*",
     "lint": "eslint './src/**/*.{js,ts,tsx}'",
     "start": "yarn run start-dev",
-    "start-dev": "webpack-dev-server --config=configs/webpack/dev.js",
+    "start-dev": "webpack-dev-server --config=configs/webpack/dev.js --https --cert ~/.localhost-ssl/localhost.crt --key ~/.localhost-ssl/localhost.key",
     "start-prod": "yarn run build && node express.js",
     "test": "jest --coverage --watchAll --config=configs/jest.json"
   },
