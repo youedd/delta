@@ -1,21 +1,21 @@
 import * as React from 'react';
 import Wrapper from './P5Wrapper';
 import p5 from 'p5';
-import Alters, { Alter, AlterBuilder, Capture } from '../services/Alters';
-import Draggable from './Draggable';
+import { Alter, AlterBuilder, Capture } from '../services/Alters';
+import Pannel from './Pannel';
 
 const width = 300;
 const height = 200;
-let capture: p5.Element;
-let alter: Alter;
+const createSketch = (alterBuilder: AlterBuilder) => (sketch: p5) => {
+  let capture: p5.Element;
+  let alter: Alter;
 
-const sketch = (alterBuilder: AlterBuilder) => (sketch: p5) => {
   sketch.setup = () => {
     sketch.createCanvas(width, height);
 
     capture = sketch.createCapture(sketch.VIDEO);
 
-    alter = alterBuilder(sketch, (capture as unknown) as Capture);
+    alter = alterBuilder.build(sketch, (capture as unknown) as Capture);
     alter.setup();
     capture.hide();
   };
@@ -27,29 +27,20 @@ const sketch = (alterBuilder: AlterBuilder) => (sketch: p5) => {
   };
 };
 
-const realSketch = sketch(Alters.matrix);
+interface Props extends React.ComponentProps<'div'> {
+  alter: AlterBuilder;
+}
+const Camera: React.FC<Props> = ({ alter }) => {
+  const [sketch, setSketch] = React.useState<(sketch: p5) => void>();
+  React.useEffect(() => {
+    setSketch(() => createSketch(alter));
+  }, [alter]);
 
-const Camera: React.FC<React.ComponentProps<'div'>> = () => {
-  const [visible, setVisible] = React.useState(true);
-
-  return (
-    <Draggable style={{ width: `${width}px` }}>
-      <div className='camera-bar'>
-        <span
-          className={visible ? 'expand-button' : 'expand-button active'}
-          onMouseDown={(e) => {
-            e.stopPropagation();
-            setVisible(!visible);
-          }}
-        />
-        {` Camera`}
-      </div>
-      <Wrapper
-        sketch={realSketch}
-        style={{ visibility: visible ? 'visible' : 'hidden' }}
-      />
-    </Draggable>
-  );
+  return sketch ? (
+    <Pannel expendable width={300} title='Camera'>
+      <Wrapper key={alter.info.name} sketch={sketch} />
+    </Pannel>
+  ) : null;
 };
 
 export default Camera;

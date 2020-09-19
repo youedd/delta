@@ -12,4 +12,11 @@ export type Alter = {
   setup: () => void;
   draw: () => void;
 };
-export type AlterBuilder = (sketch: p5, capture: Capture) => Alter;
+
+export type AlterBuilder = {
+  info: {
+    name: string;
+    description: string;
+  };
+  build: (sketch: p5, capture: Capture) => Alter;
+};

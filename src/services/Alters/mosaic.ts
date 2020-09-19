@@ -1,13 +1,14 @@
 import { AlterBuilder } from './types';
 
-const mosaic: AlterBuilder = {
+const matrix: AlterBuilder = {
   info: {
-    name: 'Matrix Mode 😎',
-    description: 'Say Hi to your friends from the matrix 👋',
+    name: 'Mosaic',
+    description:
+      'If you have been in japan, you can say your face is censured!',
   },
   build: (sketch, capture) => {
-    const cols = 60;
-    const rows = 40;
+    const cols = 30;
+    const rows = 20;
     const scale = sketch.min(sketch.width / cols, sketch.height / rows);
     return {
       setup: () => {
@@ -17,7 +18,6 @@ const mosaic: AlterBuilder = {
       },
 
       draw: () => {
-        sketch.background(0, 0, 0);
         capture.loadPixels();
 
         for (let y = 0; y < capture.height; y++) {
@@ -26,13 +26,9 @@ const mosaic: AlterBuilder = {
             const r = capture.pixels[index + 0];
             const g = capture.pixels[index + 1];
             const b = capture.pixels[index + 2];
-            const bright = (r + g + b) / 3;
-            sketch.fill(0, 255, 0, bright);
-            sketch.text(
-              sketch.random() < 0.5 ? '0' : '1',
-              x * scale,
-              y * scale,
-            );
+
+            sketch.fill(r, g, b);
+            sketch.rect(x * scale, y * scale, scale, scale);
           }
         }
       },
@@ -40,4 +36,4 @@ const mosaic: AlterBuilder = {
   },
 };
 
-export default mosaic;
+export default matrix;
