@@ -10,24 +10,24 @@ const createSketch = (
   camera: HTMLCanvasElement,
 ) => (sketch: p5) => {
   let alter: Alter;
-  let p5Canvas: HTMLCanvasElement;
+  let renderer: p5.Renderer;
 
   const drawOutput = (canvas: HTMLCanvasElement) => {
     const context = canvas.getContext('2d');
-    context.drawImage(p5Canvas, 0, 0, canvas.width, canvas.height);
+    context.drawImage(renderer.elt, 0, 0, canvas.width, canvas.height);
   };
 
   sketch.setup = () => {
+    sketch.noCanvas();
     alter = alterBuilder.build(sketch);
     alter.renderer.hide();
-    p5Canvas = alter.renderer.elt as HTMLCanvasElement;
+    renderer = alter.renderer;
   };
 
   sketch.draw = () => {
     if (alter) {
       alter.draw();
     }
-
     drawOutput(output);
     drawOutput(camera);
   };

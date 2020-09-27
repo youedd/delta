@@ -8,25 +8,24 @@ const mosaic: AlterBuilder = {
   },
 
   build: (sketch) => {
-    const renderer = sketch.createCanvas(800, 600);
+    const renderer = sketch.createGraphics(800, 600);
     const capture = sketch.createCapture(sketch.VIDEO) as p5.Element & p5.Image;
     const cols = 40;
     const rows = 30;
 
     capture.size(cols, rows);
 
-    const scale = sketch.min(sketch.width / cols, sketch.height / rows);
+    const scale = sketch.min(renderer.width / cols, renderer.height / rows);
 
-    sketch.noStroke();
-    sketch.textSize(scale);
+    renderer.noStroke();
+    renderer.textSize(scale);
 
     capture.hide();
-    renderer.hide();
 
     return {
       renderer,
       draw: () => {
-        sketch.background(0, 0, 0);
+        renderer.background(0, 0, 0);
         capture.loadPixels();
 
         for (let y = 0; y < capture.height; y++) {
@@ -36,8 +35,8 @@ const mosaic: AlterBuilder = {
             const g = capture.pixels[index + 1];
             const b = capture.pixels[index + 2];
             const bright = (r + g + b) / 3;
-            sketch.fill(0, 255, 0, bright);
-            sketch.text(
+            renderer.fill(0, 255, 0, bright);
+            renderer.text(
               sketch.random() < 0.5 ? '0' : '1',
               x * scale,
               y * scale,

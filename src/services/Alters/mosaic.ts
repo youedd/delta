@@ -8,18 +8,17 @@ const matrix: AlterBuilder = {
       'If you have been in japan, you can say your face is censured!',
   },
   build: (sketch) => {
-    const renderer = sketch.createCanvas(800, 600);
+    const renderer = sketch.createGraphics(800, 600);
     const capture = sketch.createCapture(sketch.VIDEO) as p5.Element & p5.Image;
 
     const cols = 40;
     const rows = 30;
-    const scale = sketch.min(sketch.width / cols, sketch.height / rows);
-
-    sketch.noStroke();
+    const scale = sketch.min(renderer.width / cols, renderer.height / rows);
 
     capture.size(cols, rows);
     capture.hide();
-    renderer.hide();
+
+    renderer.noStroke();
 
     return {
       renderer,
@@ -33,8 +32,8 @@ const matrix: AlterBuilder = {
             const g = capture.pixels[index + 1];
             const b = capture.pixels[index + 2];
 
-            sketch.fill(r, g, b);
-            sketch.rect(x * scale, y * scale, scale, scale);
+            renderer.fill(r, g, b);
+            renderer.rect(x * scale, y * scale, scale, scale);
           }
         }
       },
