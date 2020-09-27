@@ -17,6 +17,9 @@ const P5Wrapper: React.FC<Props> = ({ sketch, ...props }) => {
       }
       instance.current = new p5(sketch, container);
     }
+    return () => {
+      instance.current.remove();
+    };
   }, [sketch]);
   return <div ref={wrapper} {...props} />;
 };
