@@ -3,7 +3,7 @@ import { hot } from 'react-hot-loader';
 
 import './../assets/scss/App.scss';
 import Camera from './Camera';
-import { Peer } from '../services/peer';
+import * as Peer from '../services/peer';
 import AlterButton from './AlterButton';
 import { AlterBuilder } from '../services/Alters';
 import matrix from '../services/Alters/matrix';
@@ -15,7 +15,6 @@ declare global {
   }
 }
 
-let peer: Peer;
 const App: React.FC = () => {
   const [id, setId] = React.useState<string>();
   const [alter, setAlter] = React.useState<AlterBuilder>(matrix);
@@ -24,37 +23,18 @@ const App: React.FC = () => {
   React.useEffect(() => {
     const href = window.location.href;
     const peerId = href.replace(/^[^#]*#?/g, '');
-    peer = Peer();
-    peer.on('open', (id) => {
+
+    Peer.init((id, call) => {
       setId(id);
-
       if (peerId) {
-        const canvas = document.querySelector('canvas');
-        const stream = canvas.captureStream();
-        const call = peer.call(peerId, stream);
-        call.on('stream', function (remoteStream) {
-          Logger.log('responded');
-          video.current.srcObject = remoteStream;
-          video.current.play().catch(Logger.error);
-        });
+        call(peerId);
       }
-
-      peer.on('call', (call) => {
-        const canvas = document.querySelector('canvas');
-        const stream = canvas.captureStream(25);
-        call.answer(stream); // Answer the call with an A/V stream.
-        call.on('stream', (remoteStream) => {
-          Logger.log('called');
-          video.current.srcObject = remoteStream;
-          video.current.play().catch(Logger.error);
-        });
-      });
     });
   }, []);
 
   return (
     <div className='app'>
-      <video id='vido' ref={video} width={1000} height={1000} />
+      <video id='input' ref={video} width={800} height={600} />
       <Camera alter={alter} />
       <button
         onClick={() => {
