@@ -1,29 +1,35 @@
 import * as React from 'react';
 import Wrapper from './P5Wrapper';
 import p5 from 'p5';
-import { Alter, AlterBuilder, Capture } from '../services/Alters';
+import { Alter, AlterBuilder } from '../services/Alters';
 import Pannel from './Pannel';
 
-const width = 300;
-const height = 200;
-const createSketch = (alterBuilder: AlterBuilder) => (sketch: p5) => {
-  let capture: p5.Element;
+const createSketch = (
+  alterBuilder: AlterBuilder,
+  output: HTMLCanvasElement,
+  camera: HTMLCanvasElement,
+) => (sketch: p5) => {
   let alter: Alter;
+  let p5Canvas: HTMLCanvasElement;
+
+  const drawOutput = (canvas: HTMLCanvasElement) => {
+    const context = canvas.getContext('2d');
+    context.drawImage(p5Canvas, 0, 0, canvas.width, canvas.height);
+  };
 
   sketch.setup = () => {
-    sketch.createCanvas(width, height);
-
-    capture = sketch.createCapture(sketch.VIDEO);
-
-    alter = alterBuilder.build(sketch, (capture as unknown) as Capture);
-    alter.setup();
-    capture.hide();
+    alter = alterBuilder.build(sketch);
+    alter.renderer.hide();
+    p5Canvas = alter.renderer.elt as HTMLCanvasElement;
   };
 
   sketch.draw = () => {
     if (alter) {
       alter.draw();
     }
+
+    drawOutput(output);
+    drawOutput(camera);
   };
 };
 
@@ -31,16 +37,35 @@ interface Props extends React.ComponentProps<'div'> {
   alter: AlterBuilder;
 }
 const Camera: React.FC<Props> = ({ alter }) => {
+  const output = React.useRef<HTMLCanvasElement>();
+  const camera = React.useRef<HTMLCanvasElement>();
+
   const [sketch, setSketch] = React.useState<(sketch: p5) => void>();
+
   React.useEffect(() => {
-    setSketch(() => createSketch(alter));
+    setSketch(() => createSketch(alter, output.current, camera.current));
   }, [alter]);
 
-  return sketch ? (
-    <Pannel expendable width={300} title='Camera'>
-      <Wrapper key={alter.info.name} sketch={sketch} />
-    </Pannel>
-  ) : null;
+  return (
+    <>
+      <canvas
+        ref={output}
+        id='output'
+        style={{ display: 'none' }}
+        width={800}
+        height={600}
+      />
+      <Pannel expendable width={400} title='Camera'>
+        <canvas
+          ref={camera}
+          width={400}
+          height={300}
+          style={{ backgroundColor: 'black' }}
+        />
+      </Pannel>
+      {sketch ? <Wrapper sketch={sketch} /> : null}{' '}
+    </>
+  );
 };
 
 export default Camera;

@@ -1,3 +1,4 @@
+import p5 from 'p5';
 import { AlterBuilder } from './types';
 
 const mosaic: AlterBuilder = {
@@ -5,17 +6,25 @@ const mosaic: AlterBuilder = {
     name: 'Matrix Mode 😎',
     description: 'Say Hi to your friends from the matrix 👋',
   },
-  build: (sketch, capture) => {
-    const cols = 60;
-    const rows = 40;
-    const scale = sketch.min(sketch.width / cols, sketch.height / rows);
-    return {
-      setup: () => {
-        capture.size(cols, rows);
-        sketch.noStroke();
-        sketch.textSize(scale);
-      },
 
+  build: (sketch) => {
+    const renderer = sketch.createCanvas(800, 600);
+    const capture = sketch.createCapture(sketch.VIDEO) as p5.Element & p5.Image;
+    const cols = 40;
+    const rows = 30;
+
+    capture.size(cols, rows);
+
+    const scale = sketch.min(sketch.width / cols, sketch.height / rows);
+
+    sketch.noStroke();
+    sketch.textSize(scale);
+
+    capture.hide();
+    renderer.hide();
+
+    return {
+      renderer,
       draw: () => {
         sketch.background(0, 0, 0);
         capture.loadPixels();

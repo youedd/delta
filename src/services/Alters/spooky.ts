@@ -5,17 +5,23 @@ const spooky: AlterBuilder = {
     name: 'Spooky 👻',
     description: 'booooooo',
   },
-  build: (sketch, capture) => {
+  build: (sketch) => {
+    const renderer = sketch.createCanvas(800, 600);
+    const capture = sketch.createCapture(sketch.VIDEO);
+
+    capture.size(300, 200);
+
+    renderer.hide();
+    capture.hide();
+
     return {
-      setup: () => {
-        capture.size(300, 200);
-      },
+      renderer,
 
       draw: () => {
         sketch.translate(sketch.width, 0); // move to far corner
         sketch.scale(-1.0, 1.0); // flip x-axis backwards
 
-        sketch.image(capture, 0, 0);
+        sketch.image(capture, 0, 0, 800, 600);
         sketch.filter(sketch.INVERT);
       },
     };

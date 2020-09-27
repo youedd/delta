@@ -1,15 +1,7 @@
 import p5 from 'p5';
 
-export type Capture = {
-  size: (width: number, height: number) => void;
-  loadPixels: () => void;
-  height: number;
-  width: number;
-  pixels: number[];
-};
-
 export type Alter = {
-  setup: () => void;
+  renderer: p5.Renderer;
   draw: () => void;
 };
 
@@ -18,5 +10,5 @@ export type AlterBuilder = {
     name: string;
     description: string;
   };
-  build: (sketch: p5, capture: Capture) => Alter;
+  build: (sketch: p5) => Alter;
 };

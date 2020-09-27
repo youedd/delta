@@ -1,3 +1,4 @@
+import p5 from 'p5';
 import { AlterBuilder } from './types';
 
 const matrix: AlterBuilder = {
@@ -6,17 +7,22 @@ const matrix: AlterBuilder = {
     description:
       'If you have been in japan, you can say your face is censured!',
   },
-  build: (sketch, capture) => {
-    const cols = 30;
-    const rows = 20;
-    const scale = sketch.min(sketch.width / cols, sketch.height / rows);
-    return {
-      setup: () => {
-        capture.size(cols, rows);
-        sketch.noStroke();
-        sketch.textSize(scale);
-      },
+  build: (sketch) => {
+    const renderer = sketch.createCanvas(800, 600);
+    const capture = sketch.createCapture(sketch.VIDEO) as p5.Element & p5.Image;
 
+    const cols = 40;
+    const rows = 30;
+    const scale = sketch.min(sketch.width / cols, sketch.height / rows);
+
+    sketch.noStroke();
+
+    capture.size(cols, rows);
+    capture.hide();
+    renderer.hide();
+
+    return {
+      renderer,
       draw: () => {
         capture.loadPixels();
 
